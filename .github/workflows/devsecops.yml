@@ -8,18 +8,28 @@ on:
 
 jobs:
     build_docker:
-        name: Build Docker Image
-        runs-on: ubuntu-latest
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+        - name: Check for Docker-relevant changes
+          id: changes
+          run: |
+            git fetch origin master
+            CHANGED=$(git diff --name-only origin/master HEAD)
+            echo "$CHANGED"
+            echo "changed=$CHANGED" >> $GITHUB_OUTPUT
 
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3
-
-            - name: Build Docker Image
-              run: docker build -t pygoat:latest .
+        - name: Build Docker image
+          if: |
+            steps.changes.outputs.changed != '' &&
+            (
+              contains(steps.changes.outputs.changed, 'Dockerfile') ||
+              contains(steps.changes.outputs.changed, 'requirements.txt') ||
+              contains(steps.changes.outputs.changed, '.py')
+            )
+          run: docker build -t pygoat:latest .
     sca-security:
         name: SCA Scan (pip-audit)
         runs-on: ubuntu-latest
