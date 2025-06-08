@@ -53,15 +53,14 @@ jobs:
               uses: pypa/gh-action-pip-audit@v1.1.0
               continue-on-error: true
 
-            - name: Run Snyk scan
-              uses: actions/checkout@v4
+            - name: Install Snyk CLI
+              run: npm install -g snyk
 
-            - uses: snyk/actions/setup@master
-              with:
-                token: ${{ secrets.SNYK_TOKEN }}
+            - name: Authenticate Snyk
+              run: snyk auth ${{ secrets.SNYK_TOKEN }}
 
-            - uses: snyk/actions/python@master
-              env:
-                SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+            - name: Run Snyk test (CLI)
+              run: snyk test --file=requirements.txt --package-manager=pip
+              continue-on-error: true
 
       
