@@ -53,7 +53,7 @@ jobs:
               uses: pypa/gh-action-pip-audit@v1.1.0
               continue-on-error: true
         
-            - name: Run Snyk to check for vulnerabilities
+            - name: Run Snyk
               uses: snyk/actions/python-3.10@master
               env:
                 SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
