@@ -57,11 +57,22 @@ jobs:
             pip install -r requirements.txt
 
         - name: Run pip-audit
-          uses: pypa/gh-action-pip-audit@v1.1.0
+          uses: pypa/gh-action-pip-audit@v1.1.0 
           continue-on-error: true
 
         - name: Run Snyk to check for vulnerabilities
           uses: snyk/actions/python@master
           env:
             SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          with:
+            command: test
           continue-on-error: true
+
+        - name: Upload dependency snapshot to Snyk Dashboard
+          if: github.ref == 'refs/heads/master'
+          uses: snyk/actions/python@master
+          env:
+            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          with:
+            command: monitor
+
