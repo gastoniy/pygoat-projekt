@@ -66,6 +66,7 @@ jobs:
             SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           with:
             command: test
+            args: --build-python-system-deps
           continue-on-error: true
 
         - name: Upload dependency snapshot to Snyk Dashboard
@@ -75,4 +76,5 @@ jobs:
             SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           with:
             command: monitor
+            args: --build-python-system-deps
 
