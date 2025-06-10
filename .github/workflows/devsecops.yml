@@ -10,26 +10,25 @@ jobs:
     build_docker:
       runs-on: ubuntu-latest
       steps:
-        - name: Checkout
-          uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
 
-        - name: Check for Docker-relevant changes
-          id: changes
-          run: |
-            git fetch origin master
-            CHANGED=$(git diff --name-only origin/master HEAD)
-            echo "$CHANGED"
-            echo "changed=$CHANGED" >> $GITHUB_OUTPUT
+      - name: Check for relevant file changes
+        id: files_changed
+        uses: tj-actions/changed-files@v43
+        with:
+          files: |
+            Dockerfile
+            requirements.txt
+            **.py
 
-        - name: Build Docker image
-          if: |
-            steps.changes.outputs.changed != '' &&
-            (
-              contains(steps.changes.outputs.changed, 'Dockerfile') ||
-              contains(steps.changes.outputs.changed, 'requirements.txt') ||
-              contains(steps.changes.outputs.changed, '.py')
-            )
-          run: docker build -t pygoat:latest .
+      - name: Build Docker image if changes were detected
+        if: steps.files_changed.outputs.any_changed == 'true'
+        run: |
+          docker build -t pygoat:latest .
+
     sca-security:
         name: SCA Scan (pip-audit + Snyk)
         runs-on: ubuntu-latest
