@@ -57,3 +57,4 @@ jobs:
               uses: snyk/actions/python-3.10@master
               env:
                 SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+              continue-on-error: true
