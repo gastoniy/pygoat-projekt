@@ -60,11 +60,3 @@ jobs:
             command: test
           continue-on-error: true
 
-        - name: Upload dependency snapshot to Snyk Dashboard
-          if: github.ref == 'refs/heads/master'
-          uses: snyk/actions/python-3.10@master
-          env:
-            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          with:
-            command: monitor
-
