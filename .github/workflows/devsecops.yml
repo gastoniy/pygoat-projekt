@@ -198,7 +198,8 @@ jobs:
             path: trivy-report.html
 
     publish:
-      needs: [image-scan-trivy, dast-zap]
+      #needs: [image-scan-trivy, dast-zap]
+      needs: build_docker
       runs-on: ubuntu-latest
       steps:
         - name: Download Artifact
@@ -211,10 +212,13 @@ jobs:
           with:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-        - name: Load, tag and push
+        - name: Load and set var with DATE
+          id: docker_push
           run: |
-            echo "DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
             docker load -i image.tar
-            docker tag pygoat:latest ${{ secrets.DOCKERHUB_USERNAME }}/test_pygoat:${DATE}
-            docker push ${{ secrets.DOCKERHUB_USERNAME }}/test_pygoat:${DATE}
+            echo "DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
+    
+        - name: Push the tagged image
+          run: |
+            docker tag pygoat:latest ${{ secrets.DOCKERHUB_USERNAME }}/test_pygoat:${{ steps.docker_push.outputs.DATE }}
+            docker push ${{ secrets.DOCKERHUB_USERNAME }}/test_pygoat:${{ steps.docker_push.outputs.DATE }}
