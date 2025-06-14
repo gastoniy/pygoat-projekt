@@ -8,7 +8,7 @@ on:
 
 jobs:
     build_docker:
-      needs: [sca-pip-audit, sca-snyk, semgrep, sast-bandit, scan]
+      needs: [sca-pip-audit, sca-snyk, semgrep, sast-bandit, secrets-gitleaks]
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
@@ -90,25 +90,16 @@ jobs:
             bandit -r . -ll
           continue-on-error: true
 
-    scan:
-        name: gitleaks
+    secrets-gitleaks:
+        name: Secrets Scan - GitLeaks
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v4
+          - name: Checkout code
+            uses: actions/checkout@v4
             with:
               fetch-depth: 0
-          - name: Install GitLeaks binary
-            run: |
-                    curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
-                    chmod +x gitleaks
-                    sudo mv gitleaks /usr/local/bin/
 
-          - name: Scan full Git history
-            run: |
-                    gitleaks detect \
-                      --source=. \
-                      --log-opts="--all" \
-                      --report-format=sarif \
-                      --report-path=gitleaks-history.sarif \
-                      --verbose \
-                      --redact
+          - name: Run Gitleaks Scan
+            uses: gitleaks/gitleaks-action@v2
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
