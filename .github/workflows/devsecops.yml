@@ -145,8 +145,9 @@ jobs:
             echo "App is ready!"
         # Scan with ZAP part
         - name: Run ZAP Full Scan
-          uses: zaproxy/action-full-scan@v0.4.0
+          uses: zaproxy/action-full-scan@v0.12.0
           with:
+            token: ${{ secrets.GITHUB_TOKEN }}
             target: 'http://localhost:8000'
             fail_action: false
             cmd_options: '-a -z "-out_of_scope_regex \\/logout.*"'
