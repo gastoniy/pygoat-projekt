@@ -143,3 +143,17 @@ jobs:
             echo "Waiting for app to be ready ..."
             timeout 120s bash -c 'until curl -s http://localhost:8000 > /dev/null; do echo "Waiting for app ..."; sleep 5; done'
             echo "App is ready!"
+        # Scan with ZAP part
+        - name: Run ZAP Full Scan
+          uses: zaproxy/action-full-scan@v0.4.0
+          with:
+            target: 'http://localhost:8000'
+            fail_action: false
+            cmd_options: '-a -z "-out_of_scope_regex \\/logout.*"'
+
+        - name: Upload ZAP report
+          uses: actions/upload-artifact@v4
+          if: always()
+          with:
+            name: zap-report
+            path: report_html.html
