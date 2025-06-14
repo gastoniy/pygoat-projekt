@@ -182,3 +182,12 @@ jobs:
             input: image.tar
             severity: 'CRITICAL,HIGH'
             exit-code: '1'
+            format: 'template'
+            template: '@$HOME/.local/bin/trivy-bin/contrib/html.tpl'
+            output: 'trivy-report.html'
+
+        - name: Upload Trivy HTML report
+          uses: actions/upload-artifact@v4
+          with:
+            name: trivy-html-report
+            path: trivy-report.html
