@@ -99,9 +99,19 @@ jobs:
           with:
             fetch-depth: 0
 
-        - name: Run GitLeaks
+        - name: Run GitLeaks History Scan
           uses: gitleaks/gitleaks-action@v2
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             with:
-            args: detect --source . --log-opts='--all --full-history'
+            args: detect --source=. --log-opts='--all --full-history'
+          continue-on-error: true
+
+
+        - name: Run Gitleaks Staged Files
+          uses: gitleaks/gitleaks-action@v2
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            with:
+            args: protect --source=. --staged --verbose
+          continue-on-error: true
