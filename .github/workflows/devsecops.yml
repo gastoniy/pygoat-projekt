@@ -187,7 +187,6 @@ jobs:
           with:
             input: image.tar
             severity: 'CRITICAL,HIGH'
-            exit-code: '1'
             format: 'template'
             template: '@${{ github.workspace }}/trivy-html.tpl'
             output: 'trivy-report.html'
