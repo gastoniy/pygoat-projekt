@@ -9,7 +9,7 @@ on:
 
 jobs:
     build_docker:
-      # needs: [sca-pip-audit, sca-snyk, sast-semgrep, sast-bandit, secret-scan-gitleaks]
+      needs: [sca-pip-audit, sca-snyk, sast-semgrep, sast-bandit, secret-scan-gitleaks]
       runs-on: ubuntu-latest
       steps:
 
@@ -114,9 +114,9 @@ jobs:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
               args: |
-                --redact # keys stay masked in the report
-                --exit-code 0 # pipeline will not fail
-                --verbose # more info (maybe delete that) 
+                --redact
+                --exit-code 0
+                --verbose
             continue-on-error: true
     
     dast-zap:
@@ -126,7 +126,7 @@ jobs:
       steps:
         - name: Checkout Code
           uses: actions/checkout@v4
-        # Docker in Docker part
+
         - name: Download Docker Image artifact
           uses: actions/download-artifact@v4
           with:
@@ -144,7 +144,7 @@ jobs:
             echo "Waiting for app to be ready ..."
             timeout 120s bash -c 'until curl -s http://localhost:8000 > /dev/null; do echo "Waiting for app ..."; sleep 5; done'
             echo "App is ready!"
-        # Scan with ZAP part
+
         - name: Run ZAP baseline scan
           uses: zaproxy/action-baseline@v0.14.0
           with:
