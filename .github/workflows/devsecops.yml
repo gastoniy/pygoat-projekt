@@ -8,7 +8,7 @@ on:
 
 jobs:
     build_docker:
-      needs: [sca-pip-audit, sca-snyk, semgrep, sast-bandit]
+      needs: [sca-pip-audit, sca-snyk, semgrep, sast-bandit, gitleaks]
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
