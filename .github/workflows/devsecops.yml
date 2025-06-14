@@ -9,7 +9,7 @@ on:
 
 jobs:
     build_docker:
-      # needs: [sca-pip-audit, sca-snyk, semgrep, sast-bandit, scan]
+      # needs: [sca-pip-audit, sca-snyk, sast-semgrep, sast-bandit, secret-scan-gitleaks]
       runs-on: ubuntu-latest
       steps:
 
@@ -76,7 +76,7 @@ jobs:
             command: test
             args: --file=requirements.txt --severity-threshold=high
 
-    semgrep:
+    sast-semgrep:
       name: semgrep/ci
       runs-on: ubuntu-latest
       container:
@@ -100,7 +100,7 @@ jobs:
             bandit -r . -ll
           continue-on-error: true
 
-    scan:
+    secret-scan-gitleaks:
         name: gitleaks secret scan
         runs-on: ubuntu-latest
         steps:
@@ -159,3 +159,26 @@ jobs:
           with:
             name: zap-report
             path: report_html.html
+
+    image-scan-trivy:
+      name: Trivy Scan before publishing
+      runs-on: ubuntu-latest
+      needs: build_docker
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          
+        - name: Download Docker Image artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: docker-image
+
+        - name: Load Docker Image
+          run: docker load -i image.tar
+
+        - name: Run Trivy on tarball
+          uses: aquasecurity/trivy-action@0.28.0
+          with:
+            input: image.tar
+            severity: 'CRITICAL,HIGH'
+            exit-code: '1'
