@@ -9,7 +9,7 @@ on:
 
 jobs:
     build_docker:
-      # needs: [sca-pip-audit, sca-snyk, sast-semgrep, sast-bandit, secret-scan-gitleaks]
+      needs: [sca-pip-audit, sca-snyk, sast-semgrep, sast-bandit, secret-scan-gitleaks]
       runs-on: ubuntu-latest
       steps:
 
@@ -214,6 +214,7 @@ jobs:
 
         - name: Load, tag and push
           run: |
+            echo "DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
             docker load -i image.tar
-            docker tag pygoat:latest ${{ secrets.DOCKERHUB_USERNAME }}/test_pygoat:latest
-            docker push ${{ secrets.DOCKERHUB_USERNAME }}/test_pygoat:latest
+            docker tag pygoat:latest ${{ secrets.DOCKERHUB_USERNAME }}/test_pygoat:${DATE}
+            docker push ${{ secrets.DOCKERHUB_USERNAME }}/test_pygoat:${DATE}
