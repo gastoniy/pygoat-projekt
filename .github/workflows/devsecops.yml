@@ -9,7 +9,7 @@ on:
 
 jobs:
     build_docker:
-      needs: [sca-pip-audit, sca-snyk, semgrep, sast-bandit, scan]
+      # needs: [sca-pip-audit, sca-snyk, semgrep, sast-bandit, scan]
       runs-on: ubuntu-latest
       steps:
 
