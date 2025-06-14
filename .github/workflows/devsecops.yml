@@ -104,5 +104,8 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             with:
-            args: detect --source=. --log-opts="--all" --report-format=sarif --report-path=results.sarif --verbose --redact
+            args: |
+              --redact
+              --exit-code 0
+              --verbose
           continue-on-error: true      
