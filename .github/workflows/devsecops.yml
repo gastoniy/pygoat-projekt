@@ -8,7 +8,7 @@ on:
 
 jobs:
     build_docker:
-      needs: [sca-pip-audit, sca-snyk, semgrep, sast-bandit, gitleaks]
+      needs: [sca-pip-audit, sca-snyk, semgrep, sast-bandit, scan]
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
@@ -90,22 +90,13 @@ jobs:
             bandit -r . -ll
           continue-on-error: true
 
-    gitleaks:
-      name: GitLeaks Secret Scan
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout Source
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
-
-        - name: Scan for leaks
-          uses: gitleaks/gitleaks-action@v2
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    scan:
+        name: gitleaks
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
             with:
-            args: |
-              --redact
-              --exit-code 0
-              --verbose
-          continue-on-error: true      
+              fetch-depth: 0
+          - uses: gitleaks/gitleaks-action@v2
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
