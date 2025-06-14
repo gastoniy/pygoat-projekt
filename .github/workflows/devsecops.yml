@@ -8,6 +8,7 @@ on:
 
 jobs:
     build_docker:
+      needs: [sca-security, semgrep]
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
@@ -68,4 +69,16 @@ jobs:
       steps:
       - uses: actions/checkout@v4
       - run: semgrep ci
+
+    sast-bandit:
+      name: bandit
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-python@v5
+          with:
+            python-version: '3.10'
+        - run: |
+            pip install bandit
+            bandit -r . -ll
 
