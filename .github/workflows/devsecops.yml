@@ -144,13 +144,13 @@ jobs:
             timeout 120s bash -c 'until curl -s http://localhost:8000 > /dev/null; do echo "Waiting for app ..."; sleep 5; done'
             echo "App is ready!"
         # Scan with ZAP part
-        - name: Run ZAP Full Scan
+        - name: Run ZAP baseline scan
           uses: zaproxy/action-baseline@v0.14.0
           with:
             token: ${{ secrets.GITHUB_TOKEN }}
             target: 'http://localhost:8000'
             fail_action: false
-            cmd_options: '-z "-out_of_scope_regex \\/logout.*"'
+            cmd_options: '-a'
 
         - name: Upload ZAP report
           uses: actions/upload-artifact@v4
