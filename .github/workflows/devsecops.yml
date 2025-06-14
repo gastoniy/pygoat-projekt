@@ -8,7 +8,7 @@ on:
 
 jobs:
     build_docker:
-      needs: [sca-security, semgrep]
+      needs: [sca-pip-audit, sca-snyk, semgrep, sast-bandit]
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
@@ -30,8 +30,8 @@ jobs:
         run: |
           docker build -t pygoat:latest .
 
-    sca-security:
-      name: SCA Scan (pip-audit + Snyk)
+    sca-pip-audit:
+      name: SCA Scan (pip-audit)
       runs-on: ubuntu-latest
       steps:
         - name: Checkout code
@@ -50,6 +50,13 @@ jobs:
         - name: Run pip-audit
           uses: pypa/gh-action-pip-audit@v1.1.0 
           continue-on-error: true
+
+    sca-snyk:
+      name: SCA Scan (Snyk)
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
 
         - name: Run Snyk to check for vulnerabilities
           uses: snyk/actions/python-3.10@master
@@ -82,4 +89,5 @@ jobs:
             pip install bandit
             bandit -r . -ll
           continue-on-error: true
+
 
