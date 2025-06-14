@@ -198,8 +198,7 @@ jobs:
             path: trivy-report.html
 
     publish:
-      #needs: [image-scan-trivy, dast-zap]
-      needs: build_docker
+      needs: [image-scan-trivy, dast-zap]
       runs-on: ubuntu-latest
       steps:
         - name: Download Artifact
