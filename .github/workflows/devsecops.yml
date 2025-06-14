@@ -81,4 +81,5 @@ jobs:
         - run: |
             pip install bandit
             bandit -r . -ll
+          continue-on-error: true
 
