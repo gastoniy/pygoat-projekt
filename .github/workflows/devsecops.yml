@@ -86,7 +86,7 @@ jobs:
       steps:
       - uses: actions/checkout@v4
       - run: |
-          semgrep scan --config auto --severity ERROR
+          semgrep ci --fail-on high
 
     sast-bandit:
       name: bandit
