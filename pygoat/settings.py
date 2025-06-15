@@ -52,8 +52,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 ]
 
-INSTALLED_APPS += ['csp']
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -65,8 +63,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
-
-MIDDLEWARE.insert(0, 'csp.middleware.CSPMiddleware')
 
 ROOT_URLCONF = 'pygoat.urls'
 
@@ -172,11 +168,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net')
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", 'https://fonts.googleapis.com')
-CSP_FONT_SRC = ("'self'", 'https://fonts.gstatic.com')
 
 SECRET_COOKIE_KEY = "PYGOAT"
 CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000","http://0.0.0.0:8000","http://172.16.189.10"]
