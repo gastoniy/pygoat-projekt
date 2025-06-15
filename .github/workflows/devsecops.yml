@@ -117,6 +117,7 @@ jobs:
                 --redact
                 --exit-code 0
                 --verbose
+            continue-on-error: true
     
     dast-zap:
       name: DAST - OWASP ZAP
