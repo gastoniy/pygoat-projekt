@@ -3,6 +3,7 @@ import hashlib
 import json
 from datetime import datetime, timedelta
 import base64
+import secrets
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'  # Vulnerable: Hardcoded secret key
@@ -83,7 +84,7 @@ def reset_password():
     for username, user_data in users.items():
         if user_data['email'] == email:
             # Vulnerable: Predictable token generation
-            token = hashlib.md5(f"{email}:{datetime.now()}".encode()).hexdigest()
+            token = secrets.token_hex(32)
             password_reset_tokens[token] = username
             
             # In a real application, this would send an email
@@ -120,4 +121,4 @@ def dashboard():
     return redirect(url_for('lab'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)  # Vulnerable: Debug mode enabled in production 
+    app.run(host='0.0.0.0', port=5000, debug=False)  # Vulnerable: Debug mode enabled in production 
