@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, make_response
 import pickle
 import base64
 from dataclasses import dataclass
+import json
 
 app = Flask(__name__)
 
@@ -33,7 +34,7 @@ def deserialize_data():
         serialized_data = request.form.get('serialized_data', '')
         decoded_data = base64.b64decode(serialized_data)
         # Intentionally vulnerable deserialization, matching PyGoat
-        user = pickle.loads(decoded_data)
+        user = json.loads(decoded_data)
         
         if isinstance(user, User):
             if user.is_admin:
