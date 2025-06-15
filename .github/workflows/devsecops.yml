@@ -155,7 +155,7 @@ jobs:
           run: docker load -i image.tar
 
         - name: Run pygoat in background
-          run: docker run -d -p 8000:8000 --name pygoat pygoat:latest
+          run: docker run -d -p 8001:8000 --name pygoat pygoat:latest
 
         - name: Wait for app to be ready
           run: |
@@ -167,7 +167,7 @@ jobs:
           uses: zaproxy/action-baseline@v0.14.0
           with:
             token: ${{ secrets.GITHUB_TOKEN }}
-            target: 'http://localhost:8000'
+            target: 'http://localhost:8001'
             fail_action: false
             cmd_options: '-a'
 
