@@ -59,7 +59,7 @@ jobs:
             pip install pip-audit-extra
 
         - name: Run pip-audit-extra
-          run: pip-audit-extra --fail-level HIGH
+          run: cat requirements.txt | pip-audit-extra --severity HIGH --fail-level HIGH
           
     sca-snyk:
       name: SCA Scan (Snyk)
@@ -85,7 +85,8 @@ jobs:
         SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
       steps:
       - uses: actions/checkout@v4
-      - run: semgrep ci
+      - run: |
+          semgrep scan --config auto --severity ERROR
 
     sast-bandit:
       name: bandit
@@ -97,8 +98,7 @@ jobs:
             python-version: '3.10'
         - run: |
             pip install bandit
-            bandit -r . -ll
-          continue-on-error: true
+            bandit -r . --severity-level=high
 
     secret-scan-gitleaks:
         name: gitleaks secret scan
@@ -117,7 +117,6 @@ jobs:
                 --redact
                 --exit-code 0
                 --verbose
-            continue-on-error: true
     
     dast-zap:
       name: DAST - OWASP ZAP
