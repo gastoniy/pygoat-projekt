@@ -86,7 +86,7 @@ jobs:
       steps:
       - uses: actions/checkout@v4
       - run: |
-          semgrep ci --fail-on high
+          semgrep ci
 
     sast-bandit:
       name: bandit
