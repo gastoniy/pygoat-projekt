@@ -4,3 +4,4 @@ django-crispy-forms==1.14.0
 requests==2.28.1
 # we may need this later for api stuff
 # TODO: check if we need more packages??
+urllib3>=2.5.0 # not directly required, pinned by Snyk to avoid a vulnerability
